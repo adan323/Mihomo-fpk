@@ -71,7 +71,7 @@
             },
             {
                 "type": "tips",
-                "helpText": "• 支持同时配置多个订阅源<br/>• 推荐使用网页界面（http://localhost:9090/ui/）管理配置<br/>• 查看官方文档：<a target=\"_blank\" href=\"https://wiki.metacubex.one/config/\">https://wiki.metacubex.one/config/</a>"
+                "helpText": "• 支持同时配置多个订阅源<br/>• 推荐使用网页界面（http://localhost:9090/ui/）管理配置<br/>• 查看官方文档：<a target=\"_blank\" href=\"https://wiki.metacubex.one/config/\">https://wiki.metacubex.one/config/</a><br/>第一次启动可能失败，因为需要从github下载geoip文件，启动失败后多尝试几次即可，直到应用下载完成。"
             }
         ]
     }
