@@ -27,7 +27,6 @@ Mihomo 在飞牛 fnOS 系统上的应用打包版本，提供完整的代理客�
 - **流量嗅探** - SNI 嗅探识别 HTTPS、TLS、QUIC 等加密流量
 - **TUN 模式** - 系统级代理支持，拦截所有流量
 
-### 管理界面
 ### 地理数据库
 
 注意：为了减小仓库体积，包含 GeoIP/GeoSite/MMDB/ASN 的数据库文件已从本仓库中移除。
@@ -309,6 +308,7 @@ fnpack verify mihomo.fpk
 **最后更新:** 2026-02-21
 
 ## Mihomo飞牛fpk开发过程使用vscode ai进行
+
 
 
 
