@@ -135,6 +135,10 @@ systemctl start mihomo
 http://localhost:9090/ui/
 ```
 
+### 添加RESTful API访问口令
+打开/usr/local/apps/@appconf/mihomo/config.yaml
+在geodata-mode: true条目下添加secret: "1234"，引号内为你的访问口令
+
 ### 配置系统代理（可选）
 
 **Linux 系统代理**
@@ -309,4 +313,5 @@ fnpack verify mihomo.fpk
 **最后更新:** 2026-02-21
 
 ## Mihomo飞牛fpk开发过程使用vscode ai进行
+
 
