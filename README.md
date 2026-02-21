@@ -123,9 +123,9 @@ external-controller: 0.0.0.0:9090  # 管理接口
 
 ### 启动应用
 ```bash
-# 应用安装后会自动启动
-# 或手动启动
-systemctl start mihomo
+# 应用安装后会自动进行Geoip文件下载
+# Geoip文件下载需访问github，确保你当前的网络与github连通
+# 启动失败通常为geoip文件无法下载，请检查当前网络后重新启动应用进行下载
 ```
 
 ### 访问管理界面
@@ -214,15 +214,12 @@ mihomo/
 A: 编辑 `/usr/local/apps/@appconf/mihomo/config.yaml`，找到 `proxy-providers` 部分，修改订阅链接，然后重启应用。
 
 ### Q: 修改配置后如何生效？
-A: 修改 config.yaml 后需要重启应用，可以在网页管理界面或通过命令重启：
-```bash
-systemctl restart mihomo
-```
+A: 修改 config.yaml 后需要重启应用，可以在网页管理界面停止应用再重新启动
 
 ### Q: 如何查看应用日志？
 A: 日志通常存放在：
 ```bash
-tail -f /var/log/mihomo.log
+tail -f /var/apps/mihomo/var/info.log
 ```
 
 ### Q: 网页界面无法访问？
@@ -241,7 +238,7 @@ fnapp uninstall mihomo
 
 ### 应用无法启动
 1. 检查配置文件是否有语法错误（YAML 格式）
-2. 查看系统日志：`systemctl status mihomo`
+2. 查看系统日志/var/apps/mihomo/var/info.log
 3. 确保数据库文件存在
 
 ### 无法连接代理
@@ -253,15 +250,6 @@ fnapp uninstall mihomo
 1. 检查规则配置是否过复杂
 2. 减少健康检查频率
 3. 禁用不必要的流量嗅探
-
-## 更新和升级
-
-### 检查版本
-网页界面会显示当前版本信息
-
-### 升级应用
-- 通过飞牛应用中心检查并安装更新
-- 升级过程会保留你的配置文件
 
 ## 开发和贡献
 
@@ -308,6 +296,7 @@ fnpack verify mihomo.fpk
 **最后更新:** 2026-02-21
 
 ## Mihomo飞牛fpk开发过程使用vscode ai进行
+
 
 
 
