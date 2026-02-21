@@ -1,0 +1,15 @@
+appname               = mihomo
+version               = 1.0.0
+display_name          = Mihomo 代理
+desc                  = Mihomo 是一个轻量级的代理服务工具，支持多种代理协议，提供灵活的规则配置和强大的流量管理能力。
+arch                  = x86_64
+source                = thirdparty
+maintainer            = Mihomo Community
+maintainer_url        = https://github.com/MetaCubeX/mihomo
+distributor           = adan
+desktop_uidir         = ui
+desktop_applaunchname = mihomo.Application
+service_port          = 7890
+checkport             = true
+os_min_version        = 0.9.0
+install_type          = root

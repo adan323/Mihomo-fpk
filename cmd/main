@@ -1,0 +1,165 @@
+#!/bin/bash
+
+LOG_FILE="${TRIM_PKGVAR}/info.log"
+PID_FILE="${TRIM_PKGVAR}/app.pid"
+
+# Mihomo 可执行文件路径 - 在 app/server/ 目录下
+MIHOMO_BIN="${TRIM_APPDEST}/server/mihomo"
+CONFIG_DIR="${TRIM_PKGETC}"
+
+log_msg() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> ${LOG_FILE}
+}
+
+start_process() {
+    if status; then
+        log_msg "Application already running"
+        return 0
+    fi
+
+    log_msg "Starting mihomo application..."
+    log_msg "Binary: ${MIHOMO_BIN}"
+    log_msg "Config: ${CONFIG_DIR}"
+    log_msg "PID File: ${PID_FILE}"
+    log_msg "Log File: ${LOG_FILE}"
+    
+    # 检查可执行文件是否存在
+    if [ ! -f "${MIHOMO_BIN}" ]; then
+        log_msg "ERROR: Mihomo binary not found at ${MIHOMO_BIN}"
+        echo "Mihomo binary not found at ${MIHOMO_BIN}" > "${TRIM_TEMP_LOGFILE}"
+        return 1
+    fi
+    
+    # 检查可执行文件是否可执行
+    if [ ! -x "${MIHOMO_BIN}" ]; then
+        log_msg "WARNING: Making binary executable..."
+        chmod +x "${MIHOMO_BIN}"
+    fi
+    
+    # 确保配置目录存在
+    if [ ! -d "${CONFIG_DIR}" ]; then
+        log_msg "ERROR: Config directory not found at ${CONFIG_DIR}"
+        echo "Config directory not found at ${CONFIG_DIR}" > "${TRIM_TEMP_LOGFILE}"
+        return 1
+    fi
+    
+    # 检查配置文件
+    if [ ! -f "${CONFIG_DIR}/config.yaml" ]; then
+        log_msg "ERROR: Config file not found at ${CONFIG_DIR}/config.yaml"
+        echo "Config file not found" > "${TRIM_TEMP_LOGFILE}"
+        return 1
+    fi
+    
+    log_msg "All checks passed, starting application..."
+    log_msg "Command: ${MIHOMO_BIN} -d ${CONFIG_DIR}"
+    
+    # 直接启动 mihomo 进程，让它在后台运行
+    nohup "${MIHOMO_BIN}" -d "${CONFIG_DIR}" > ${LOG_FILE} 2>&1 &
+    local pid=$!
+    
+    log_msg "Process started with PID: ${pid}"
+    
+    # 给进程时间启动
+    sleep 3
+    
+    # 验证进程是否仍在运行
+    if kill -0 "${pid}" 2>/dev/null; then
+        printf "%s" "${pid}" > ${PID_FILE}
+        log_msg "SUCCESS: Mihomo started successfully (PID: ${pid})"
+        return 0
+    else
+        log_msg "ERROR: Mihomo process died immediately after startup"
+        log_msg "=== Application output (last 30 lines) ==="
+        tail -30 ${LOG_FILE} | while read line; do
+            log_msg "$line"
+        done
+        log_msg "=== End of output ==="
+        echo "Application failed to start - check logs" > "${TRIM_TEMP_LOGFILE}"
+        return 1
+    fi
+}
+
+stop_process() {
+    log_msg "Stopping mihomo application..."
+
+    if [ -r "${PID_FILE}" ]; then
+        pid=$(head -n 1 "${PID_FILE}" | tr -d '[:space:]')
+        
+        log_msg "Checking PID: ${pid}"
+        if ! check_process "${pid}"; then
+            log_msg "Process not running, removing PID file"
+            rm -f "${PID_FILE}"
+            return 0
+        fi
+
+        log_msg "Sending TERM signal to PID: ${pid}"
+        kill -TERM ${pid} >> ${LOG_FILE} 2>&1
+
+        local count=0
+        while check_process "${pid}" && [ $count -lt 10 ]; do
+            sleep 1
+            count=$((count + 1))
+            log_msg "Waiting for process to terminate... (${count}s/10s)"
+        done
+
+        if check_process "${pid}"; then
+            log_msg "Process still running, sending KILL signal"
+            kill -KILL "${pid}" 2>/dev/null
+            sleep 1
+        fi
+        
+        rm -f "${PID_FILE}"
+        log_msg "Process stopped successfully"
+    fi
+
+    return 0
+}
+
+check_process() {
+    local pid=$1
+    if kill -0 "${pid}" 2>/dev/null; then
+        return 0  # process exists
+    else
+        return 1  # process does not exist
+    fi
+}
+
+status() {
+    if [ -f "${PID_FILE}" ]; then
+        pid=$(head -n 1 "${PID_FILE}" | tr -d '[:space:]')
+        if check_process "${pid}"; then
+            return 0
+        else
+            # Process is not running but pidfile exists - clean it up
+            rm -f "${PID_FILE}"
+        fi    
+    fi
+
+    return 1
+}
+
+case $1 in
+start)
+    # Start the application
+    start_process
+    exit $?
+    ;;
+stop)
+    # Stop the application
+    stop_process
+    exit $?
+    ;;
+status)
+    # Check application status
+    if status; then 
+        exit 0
+    else 
+        exit 3
+    fi
+    ;;
+*)
+    exit 1
+    ;;
+esac
+    ;;
+esac

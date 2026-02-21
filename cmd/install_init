@@ -1,0 +1,246 @@
+#!/bin/bash
+
+# 安装前初始化脚本
+# 初始化配置目录和配置文件，设置web-ui目录
+
+# 确保必要的目录存在
+mkdir -p "${TRIM_PKGETC}" 2>/dev/null
+mkdir -p "${TRIM_PKGVAR}" 2>/dev/null
+
+# 创建或覆盖配置文件（直接写入，覆盖已有文件）
+cat > "${TRIM_PKGETC}/config.yaml" << 'EOF'
+
+# url 里填写自己的订阅,名称不能重复
+proxy-providers:
+  provider1:
+    url: ""
+    type: http
+    interval: 86400
+    health-check: {enable: true,url: "https://www.gstatic.com/generate_204", interval: 300}
+    override:
+      additional-prefix: "[provider1]"
+proxies: 
+  - name: "直连"
+    type: direct
+    udp: true
+
+mixed-port: 7890
+ipv6: true
+allow-lan: true
+unified-delay: false
+tcp-concurrent: true
+external-controller: 0.0.0.0:9090
+external-ui: "${TRIM_PKGETC}/mihomo/ui/"
+geodata-mode: true
+
+find-process-mode: strict
+global-ua: clash.meta
+
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+sniffer:
+  enable: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+  skip-domain:
+    - "Mijia Cloud"
+    - "+.push.apple.com"
+
+tun:
+  enable: true
+  stack: system
+  device: tun
+  mtu: 9000
+  dns-hijack:
+    - "any:53"
+    - "tcp://any:53"
+  auto-route: true
+  auto-detect-interface: true
+  strict-route: true
+
+dns:
+  enable: true
+  ipv6: true
+  enhanced-mode: fake-ip
+  fake-ip-filter:
+    - "*"
+    - "+.lan"
+    - "+.local"
+    - "+.market.xiaomi.com"
+  default-nameserver:
+    - tls://223.5.5.5
+    - tls://223.6.6.6
+  nameserver:
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
+
+geoip:
+  file: "${TRIM_APPDEST}/mihomo/server/geoip.dat"
+  
+geosite:
+  file: "${TRIM_APPDEST}/mihomo/server/geosite.dat"
+  
+mmdb:
+  file: "${TRIM_APPDEST}/mihomo/server/country-lite.mmdb"
+
+asn:
+  file: "${TRIM_APPDEST}/mihomo/server/GeoLite2-ASN.mmdb"
+
+proxy-groups:
+
+  - name: 默认
+    type: select
+    proxies: [自动选择,直连,香港,台湾,日本,新加坡,美国,其它地区,全部节点]
+
+  - name: Google
+    type: select
+    proxies: [默认,香港,台湾,日本,新加坡,美国,其它地区,全部节点,自动选择,直连]
+
+  - name: Telegram
+    type: select
+    proxies: [默认,香港,台湾,日本,新加坡,美国,其它地区,全部节点,自动选择,直连]
+
+  - name: Twitter
+    type: select
+    proxies: [默认,香港,台湾,日本,新加坡,美国,其它地区,全部节点,自动选择,直连]
+
+  - name: 哔哩哔哩
+    type: select
+    proxies: [默认,香港,台湾,日本,新加坡,美国,其它地区,全部节点,自动选择,直连]
+
+  - name: 巴哈姆特
+    type: select
+    proxies: [默认,香港,台湾,日本,新加坡,美国,其它地区,全部节点,自动选择,直连]
+
+  - name: YouTube
+    type: select
+    proxies: [默认,香港,台湾,日本,新加坡,美国,其它地区,全部节点,自动选择,直连]
+
+  - name: NETFLIX
+    type: select
+    proxies: [默认,香港,台湾,日本,新加坡,美国,其它地区,全部节点,自动选择,直连]
+
+  - name: Spotify
+    type: select
+    proxies:  [默认,香港,台湾,日本,新加坡,美国,其它地区,全部节点,自动选择,直连]
+
+  - name: Github
+    type: select
+    proxies:  [默认,香港,台湾,日本,新加坡,美国,其它地区,全部节点,自动选择,直连]
+
+  - name: 国内
+    type: select
+    proxies:  [直连,默认,香港,台湾,日本,新加坡,美国,其它地区,全部节点,自动选择]
+
+  - name: 其他
+    type: select
+    proxies:  [默认,香港,台湾,日本,新加坡,美国,其它地区,全部节点,自动选择,直连]
+
+  #分隔,下面是地区分组
+  - name: 香港
+    type: select
+    include-all: true
+    exclude-type: direct
+    filter: "(?i)港|hk|hongkong|hong kong"
+
+  - name: 台湾
+    type: select
+    include-all: true
+    exclude-type: direct
+    filter: "(?i)台|tw|taiwan"
+
+  - name: 日本
+    type: select
+    include-all: true
+    exclude-type: direct
+    filter: "(?i)日|jp|japan"
+
+  - name: 美国
+    type: select
+    include-all: true
+    exclude-type: direct
+    filter: "(?i)美|us|unitedstates|united states"
+
+  - name: 新加坡
+    type: select
+    include-all: true
+    exclude-type: direct
+    filter: "(?i)(新|sg|singapore)"
+
+  - name: 其它地区
+    type: select
+    include-all: true
+    exclude-type: direct
+    filter: "(?i)^(?!.*(?:🇭🇰|🇯🇵|🇺🇸|🇸🇬|🇨🇳|港|hk|hongkong|台|tw|taiwan|日|jp|japan|新|sg|singapore|美|us|unitedstates)).*"
+
+  - name: 全部节点
+    type: select
+    include-all: true
+    exclude-type: direct
+
+  - name: 自动选择
+    type: url-test
+    include-all: true
+    exclude-type: direct
+    tolerance: 10
+
+rules:
+  - GEOIP,lan,直连,no-resolve
+  - GEOSITE,github,Github
+  - GEOSITE,twitter,Twitter
+  - GEOSITE,youtube,YouTube
+  - GEOSITE,google,Google
+  - GEOSITE,telegram,Telegram
+  - GEOSITE,netflix,NETFLIX
+  - GEOSITE,bilibili,哔哩哔哩
+  - GEOSITE,bahamut,巴哈姆特
+  - GEOSITE,spotify,Spotify
+  - GEOSITE,CN,国内
+  - GEOSITE,geolocation-!cn,其他
+
+  - GEOIP,google,Google
+  - GEOIP,netflix,NETFLIX
+  - GEOIP,telegram,Telegram
+  - GEOIP,twitter,Twitter
+  - GEOIP,CN,国内
+  - MATCH,其他
+
+EOF
+
+if [ $? -ne 0 ]; then
+  echo "Failed to create config file" > "${TRIM_TEMP_LOGFILE}"
+  exit 1
+fi
+
+
+# 删除已存在的旧链接或目录（避免冲突）
+if [ -n "${TRIM_PKGETC}" ]; then
+  rm -rf "${TRIM_PKGETC}/mihomo/ui/" 2>/dev/null || true
+fi
+
+if [ -n "${TRIM_DATA_SHARE_PATHS}" ]; then
+  # Only remove an existing config file, do not delete the whole shared directory
+  rm -f "${TRIM_DATA_SHARE_PATHS}/config.yaml" 2>/dev/null || true
+fi
+
+# 创建 web-ui 目录的软链接（用绝对路径，避免相对路径失效）
+mkdir -p "${TRIM_PKGETC}/mihomo" 2>/dev/null || true
+if [ -n "${TRIM_APPDEST}" ]; then
+  ln -s "$(readlink -f "${TRIM_APPDEST}/mihomo/ui/")" "${TRIM_PKGETC}/mihomo/ui/" 2>/dev/null || true
+fi
+
+# 创建配置文件到共享路径的软链接（如果目标变量已设置）
+if [ -n "${TRIM_DATA_SHARE_PATHS}" ]; then
+  mkdir -p "${TRIM_DATA_SHARE_PATHS}" 2>/dev/null || true
+  ln -sf "${TRIM_PKGETC}/config.yaml" "${TRIM_DATA_SHARE_PATHS}/config.yaml" 2>/dev/null || true
+fi
+
+exit 0

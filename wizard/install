@@ -1,0 +1,78 @@
+[
+    {
+        "stepTitle": "欢迎使用Mihomo",
+        "items": [
+            {
+                "type": "tips",
+                "helpText": "🎉 Mihomo 已成功安装！Mihomo 是一个功能强大的代理客户端，支持多种协议和灵活的规则引擎。"
+            },
+            {
+                "type": "tips",
+                "helpText": "📌 网页管理界面已启动，访问地址：<strong>http://localhost:9090/ui/</strong>"
+            },
+            {
+                "type": "tips",
+                "helpText": "⚙️ 配置文件位置：<strong>/usr/local/apps/@appconf/mihomo/config.yaml</strong>"
+            }
+        ]
+    },
+    {
+        "stepTitle": "配置代理订阅",
+        "items": [
+            {
+                "type": "tips",
+                "helpText": "请编辑配置文件添加您的代理订阅链接。"
+            },
+            {
+                "type": "tips",
+                "helpText": "📝 <strong>配置文件路径：</strong> <code>/usr/local/apps/@appconf/mihomo/config.yaml</code>"
+            },
+            {
+                "type": "tips",
+                "helpText": "🔍 找到 <code>proxy-providers</code> 部分，将 <code>url: \"\"</code> 修改为您的订阅链接，例如：<br/><code>url: \"https://your-subscription-url-here\"</code>"
+            },
+            {
+                "type": "tips",
+                "helpText": "💡 <strong>快速编辑命令：</strong><br/><code>nano /usr/local/apps/@appconf/mihomo/config.yaml</code>"
+            },
+            {
+                "type": "tips",
+                "helpText": "♻️ 修改配置文件后，重启应用使配置生效。"
+            }
+        ]
+    },
+    {
+        "stepTitle": "配置说明",
+        "items": [
+            {
+                "type": "tips",
+                "helpText": "🔧 <strong>常用配置参数：</strong>"
+            },
+            {
+                "type": "tips",
+                "helpText": "• <strong>mixed-port</strong>: 混合协议端口，默认 7890<br/>• <strong>external-controller</strong>: 管理接口，默认 0.0.0.0:9090<br/>• <strong>sniffer</strong>: 流量嗅探（识别HTTPS、TLS等）<br/>• <strong>tun</strong>: TUN 模式配置"
+            },
+            {
+                "type": "tips",
+                "helpText": "• <strong>proxy-providers</strong>: 代理订阅配置<br/>• <strong>proxy-groups</strong>: 代理分组和策略<br/>• <strong>rules</strong>: 流量路由规则<br/>• <strong>dns</strong>: DNS 解析配置"
+            }
+        ]
+    },
+    {
+        "stepTitle": "重要提示",
+        "items": [
+            {
+                "type": "tips",
+                "helpText": "⚠️ <strong>重要注意事项：</strong>"
+            },
+            {
+                "type": "tips",
+                "helpText": "• 修改配置文件后需要 <strong>重启应用</strong> 才能生效<br/>• 确保订阅链接格式正确<br/>• 配置文件使用 YAML 格式，<strong>缩进很重要</strong>"
+            },
+            {
+                "type": "tips",
+                "helpText": "• 支持同时配置多个订阅源<br/>• 推荐使用网页界面（http://localhost:9090/ui/）管理配置<br/>• 查看官方文档：<a target=\"_blank\" href=\"https://wiki.metacubex.one/config/\">https://wiki.metacubex.one/config/</a>"
+            }
+        ]
+    }
+]

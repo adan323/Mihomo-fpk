@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# 升级回调脚本
+# 升级后重启应用
+
+${TRIM_APPSRC}/cmd/main start
+if [ $? -ne 0 ]; then
+    echo "Failed to start application after upgrade" > "${TRIM_TEMP_LOGFILE}"
+    exit 1
+fi
+
+exit 0

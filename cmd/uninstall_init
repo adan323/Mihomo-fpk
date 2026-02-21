@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# 卸载初始化脚本
+# 卸载前停止应用
+
+if ${TRIM_APPSRC}/cmd/main status > /dev/null 2>&1; then
+    ${TRIM_APPSRC}/cmd/main stop
+    sleep 2
+fi
+
+exit 0

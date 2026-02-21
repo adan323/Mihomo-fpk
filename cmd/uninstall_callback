@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# 卸载回调脚本
+# 卸载后清理临时文件
+
+
+# 删除配置文件和数据文件
+rm -rf /usr/local/apps/@appconf/mihomo
+rm -rf /usr/local/apps/@appcenter/mihomo
+rm -rf /usr/local/apps/@appdata/mihomo
+rm -rf /usr/local/apps/@appcache/mihomo
+rm -rf "${TRIM_DATA_SHARE_PATHS}" 2>/dev/null || true
+
+exit 0

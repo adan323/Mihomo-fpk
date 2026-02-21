@@ -1,0 +1,18 @@
+{
+    "data-share":
+    {
+        "shares":
+        [
+            {
+                "name": "mihomo",
+                "permission":
+                {
+                    "rw":
+                    [
+                        "mihomo"
+                    ]
+                }
+            }
+        ]
+    }
+}
