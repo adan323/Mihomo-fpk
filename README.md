@@ -109,7 +109,7 @@ external-controller: 0.0.0.0:9090  # 管理接口
 
 ### 地理数据库
 
-地理数据库文件存放在应用目录：
+地理数据库文件将自动下载到以下目录：
 ```
 /usr/local/apps/@appconf/mihomo/
 ├── geoip.dat                  # IP地址库
@@ -184,10 +184,6 @@ mihomo/
 ├── app/
 │   ├── server/                   # Mihomo 服务器文件
 │   │   ├── mihomo               # Mihomo 可执行文件
-│   │   ├── geoip.dat            # GeoIP 数据库
-│   │   ├── geosite.dat          # GeoSite 数据库
-│   │   ├── country-lite.mmdb    # MMDB 数据库
-│   │   └── GeoLite2-ASN.mmdb    # ASN 数据库
 │   └── ui/                       # 网页 UI 文件
 │       ├── index.html
 │       ├── config.js
@@ -313,5 +309,6 @@ fnpack verify mihomo.fpk
 **最后更新:** 2026-02-21
 
 ## Mihomo飞牛fpk开发过程使用vscode ai进行
+
 
 
